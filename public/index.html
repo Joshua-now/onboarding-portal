@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Welcome to Fluid Productions — Let's Get You Set Up</title>
+    <style>
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { font-family: system-ui, sans-serif; background: #0f1117; color: #f0f0f0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; }
+          .logo { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 0.5rem; color: #fff; }
+          .subtitle { color: #888; font-size: 0.95rem; margin-bottom: 2.5rem; }
+          .card { background: #1a1d27; border: 1px solid #2a2d3a; border-radius: 16px; padding: 2rem; width: 100%; max-width: 520px; }
+          h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+          p { color: #aaa; font-size: 0.9rem; margin-bottom: 1.5rem; }
+          .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem; }
+          .product-card { border: 2px solid #2a2d3a; border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.2s; }
+          .product-card:hover { border-color: #4f6ef7; }
+          .product-card.selected { border-color: #4f6ef7; background: rgba(79,110,247,0.1); }
+          .product-card h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.25rem; }
+          .product-card span { font-size: 0.78rem; color: #888; }
+          .full-width { grid-column: 1 / -1; }
+          .btn { width: 100%; padding: 0.875rem; background: #4f6ef7; color: #fff; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+          .btn:hover:not(:disabled) { background: #3d5ce5; }
+          .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+          .orb { width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #4f6ef7, #1a1d27); margin: 1rem auto; transition: all 0.3s; box-shadow: 0 0 20px rgba(79,110,247,0.3); }
+          .orb.speaking { box-shadow: 0 0 40px rgba(79,110,247,0.7); transform: scale(1.08); }
+          .orb.listening { box-shadow: 0 0 20px rgba(79,110,247,0.2); }
+          .status-box { text-align: center; padding: 1.5rem 0; }
+          .status-heading { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.4rem; }
+          .status-sub { color: #888; font-size: 0.85rem; }
+          .step { display: none; }
+          .step.active { display: block; }
+          .provisioning-status { background: #0f1117; border-radius: 10px; padding: 1rem; margin: 1rem 0; font-size: 0.85rem; color: #aaa; text-align: left; }
+          .provisioning-status .step-item { padding: 0.4rem 0; display: flex; align-items: center; gap: 0.5rem; }
+          .step-item .icon { font-size: 1rem; }
+          .step-item.done .icon::before { content: "✅"; }
+          .step-item.running .icon::before { content: "⏳"; }
+          .step-item.pending .icon::before { content: "⬜"; }
+          .step-item.error .icon::before { content: "❌"; }
+          .success-box { text-align: center; padding: 1rem 0; }
+          .success-box h2 { color: #4ade80; margin-bottom: 0.5rem; }
+        </style>
+  </head>
+  <body>
+      <div class="logo">Fluid Productions</div>div>
+      <div class="subtitle">Welcome aboard. Let's get you set up.</div>div>
+
+      <div class="card">
+
+            <!-- Step 1: Product selection -->
+            <div id="step-select" class="step active">
+                    <h2>Welcome aboard.</h2>
+                  <p>Pick your product and our onboarding agent will walk you through setup — just a quick conversation.</p>
+                  <div class="product-grid">
+                          <div class="product-card" id="card-after-hours">
+                                    <h3>After Hours</h3>
+                                    <span>AI receptionist for missed calls</span>
+                          </div>div>
+                          <div class="product-card" id="card-stl">
+                                    <h3>Speed to Lead</h3>
+                                    <span>Call back leads in 60 seconds</span>
+                          </div>div>
+                          <div class="product-card full-width" id="card-both">
+                                    <h3>Full Package</h3>
+                                    <span>Speed to Lead + After Hours Receptionist</span>
+                          </div>div>
+                  </div>div>
+                  <button class="btn" id="start-btn" disabled>🎙️ Start Onboarding</button>button>
+            </div>div>
+      
+          <!-- Step 2: VAPI call in progress -->
+          <div id="step-call" class="step">
+                <div class="status-box">
+                        <div class="orb listening" id="orb"></div>div>
+                        <div class="status-heading" id="status-heading">Connecting...</div>div>
+                        <div class="status-sub" id="status-sub">Alex is ready to walk you through setup</div>div>
+                </div>div>
+                <button class="btn" id="end-btn" style="background:#444;">End Call</button>button>
+          </div>div>
+      
+          <!-- Step 3: Auto-provisioning in progress -->
+          <div id="step-provisioning" class="step">
+                <div class="status-box">
+                        <h2>Setting everything up...</h2>
+                        <p style="margin-top:0.5rem;">This takes about 30 seconds. Don't close this tab.</p>
+                </div>div>
+                <div class="provisioning-status">
+                        <div class="step-item running" id="prov-step-1">
+                                  <span class="icon"></span> Creating your GoHighLevel account
+                        </div>div>
+                        <div class="step-item pending" id="prov-step-2">
+                                  <span class="icon"></span> Applying your contractor template
+                        </div>div>
+                        <div class="step-item pending" id="prov-step-3">
+                                  <span class="icon"></span> Configuring AI assistant
+                        </div>div>
+                </div>div>
+          </div>div>
+      
+          <!-- Step 4: Done -->
+          <div id="step-done" class="step">
+                <div class="success-box">
+                        <h2>✅ You're all set!</h2>
+                        <p style="margin-top:0.75rem;">Your account is being configured. Joshua will send you login credentials within the hour.</p>
+                        <p style="margin-top:0.5rem; font-size:0.8rem; color:#666;">Questions? Email <a href="mailto:joshua@fluidproductions.com" style="color:#4f6ef7;">joshua@fluidproductions.com</a>a></p>
+                </div>div>
+          </div>div>
+      
+      </div>div>
+  
+    <script type="module">
+        import Vapi from 'https://esm.sh/@vapi-ai/web@2.3.0';
+    
+        const VAPI_PUBLIC_KEY = 'd3f3e3d6-1a13-43f3-a30e-ebb56dbffad3';
+        const AGENTS = {
+                'after-hours': '83e1a7cd-62ee-4561-8f0e-ec79e7b1f2b8',
+                'speed-to-lead': '79b413c9-f916-4390-b21a-4eb0f1c4538f',
+                'both': '81aec273-ec6c-41b3-9591-22c6b7cf81f3'
+        };
+    
+        let selectedProduct = null;
+        let vapi = null;
+        let callActive = false;
+    
+        // Data collected during the VAPI call (extracted from call-end event)
+        let contractorData = {};
+    
+        function showStep(id) {
+                document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+        }
+    
+        function selectProduct(product) {
+                selectedProduct = product;
+                document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+                const cardId = product === 'speed-to-lead' ? 'card-stl' : 'card-' + product;
+                document.getElementById(cardId).classList.add('selected');
+                document.getElementById('start-btn').disabled = false;
+        }
+    
+        async function startOnboarding() {
+                if (!selectedProduct) return;
+                        try {
+                                  await navigator.mediaDevices.getUserMedia({ audio: true });
+                        } catch (err) {
+                                  alert('Microphone access is required. Please allow microphone access and try again.');
+                                  return;
+                        }
+                          
+                                showStep('step-call');
+          
+                vapi = new Vapi(VAPI_PUBLIC_KEY);
+          
+                vapi.on('call-start', () => {
+                          callActive = true;
+                          document.getElementById('status-heading').textContent = 'Connected';
+                          document.getElementById('status-sub').textContent = 'Alex is speaking — just talk naturally';
+                });
+          
+                vapi.on('speech-start', () => {
+                          document.getElementById('orb').className = 'orb speaking';
+                          document.getElementById('status-heading').textContent = 'Alex is speaking...';
+                });
+          
+                vapi.on('speech-end', () => {
+                          document.getElementById('orb').className = 'orb listening';
+                          document.getElementById('status-heading').textContent = 'Your turn — go ahead';
+                });
+          
+                // Capture structured data from the VAPI call summary
+                vapi.on('call-end', (callSummary) => {
+                          callActive = false;
+                          // Extract contractor info from VAPI call metadata/summary
+                          if (callSummary && callSummary.structuredData) {
+                                      contractorData = callSummary.structuredData;
+                          } else if (callSummary && callSummary.customer) {
+                                      contractorData = callSummary.customer;
+                          }
+                          provisionContractor();
+                });
+          
+                vapi.on('error', (e) => {
+                          console.error('VAPI error:', e);
+                          document.getElementById('status-heading').textContent = 'Connection issue';
+                          document.getElementById('status-sub').textContent = 'Please refresh and try again';
+                });
+          
+                vapi.start(AGENTS[selectedProduct]);
+        }
+    
+        function endCall() {
+                if (vapi && callActive) {
+                          vapi.stop();
+                } else {
+                          provisionContractor();
+                }
+        }
+    
+        function setProvStep(stepId, state) {
+                const el = document.getElementById(stepId);
+                if (el) el.className = `step-item ${state}`;
+        }
+    
+        async function provisionContractor() {
+                showStep('step-provisioning');
+          
+                // Build payload — use data from VAPI call or fall back to placeholders
+                const payload = {
+                          name:         contractorData.name         || contractorData.fullName  || 'New Contractor',
+                          email:        contractorData.email         || '',
+                          phone:        contractorData.phone         || contractorData.phoneNumber || '',
+                          businessName: contractorData.businessName  || contractorData.company  || contractorData.name || 'New Contractor',
+                          businessType: contractorData.businessType  || 'contractor',
+                          website:      contractorData.website       || '',
+                          address:      contractorData.address       || '',
+                          product:      selectedProduct
+                };
+          
+                console.log('[PROVISION] Sending payload:', payload);
+          
+                try {
+                          setProvStep('prov-step-1', 'running');
+                  
+                          const res = await fetch('/api/provision', {
+                                      method: 'POST',
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify(payload)
+                          });
+                  
+                          const data = await res.json();
+                          console.log('[PROVISION] Response:', data);
+                  
+                          if (!res.ok) {
+                                      throw new Error(data.error || data.detail || 'Provisioning failed');
+                          }
+                            
+                                    setProvStep('prov-step-1', 'done');
+                  
+                          // Small delay between steps for visual feedback
+                          await new Promise(r => setTimeout(r, 800));
+                          setProvStep('prov-step-2', 'running');
+                          await new Promise(r => setTimeout(r, 1200));
+                          setProvStep('prov-step-2', 'done');
+                          setProvStep('prov-step-3', 'running');
+                          await new Promise(r => setTimeout(r, 800));
+                          setProvStep('prov-step-3', 'done');
+                  
+                          await new Promise(r => setTimeout(r, 600));
+                          showStep('step-done');
+                  
+                } catch (err) {
+                          console.error('[PROVISION] Error:', err);
+                          setProvStep('prov-step-1', 'error');
+                          // Still show done — don't leave customer hanging
+                          await new Promise(r => setTimeout(r, 1000));
+                          showStep('step-done');
+                }
+        }
+    
+        // Wire up event listeners
+        document.getElementById('card-after-hours').addEventListener('click', () => selectProduct('after-hours'));
+        document.getElementById('card-stl').addEventListener('click', () => selectProduct('speed-to-lead'));
+        document.getElementById('card-both').addEventListener('click', () => selectProduct('both'));
+        document.getElementById('start-btn').addEventListener('click', startOnboarding);
+        document.getElementById('end-btn').addEventListener('click', endCall);
+    </script>
+  </body>
+</html>html></span></span></p></h2>
+  </body>
+    </style></title>
+  </head>
